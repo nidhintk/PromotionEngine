@@ -41,5 +41,64 @@ namespace PromotionEngine.UnitTests
                 }
             });
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void AddActivePromotion_ProblemWithInvalidPromotionItemQuantityPassedIn_ThrowsException()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            promotionEngine.AddActivePromotion(new Promotion()
+            {
+                PromotionParts = new List<PromotionPart>()
+                {
+                    new PromotionPart()
+                    {
+                        Item = new SkuItem()
+                        {
+                            Id = 'A'
+                        }
+                    }
+                }
+            });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void AddActivePromotion_ProblemWithInvalidPromotionTypePassedIn_ThrowsException()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            promotionEngine.AddActivePromotion(new Promotion()
+            {
+                PromotionParts = new List<PromotionPart>()
+                {
+                    new PromotionPart()
+                    {
+                        Item = new SkuItem() { Id = 'A' },
+                        Quantity = 2
+                    }
+                },
+                Value = 10
+            });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void AddActivePromotion_ProblemWithInvalidValuePassedIn_ThrowsException()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            promotionEngine.AddActivePromotion(new Promotion()
+            {
+                PromotionParts = new List<PromotionPart>()
+                {
+                    new PromotionPart()
+                    {
+                        Item = new SkuItem() { Id = 'A' },
+                        Quantity = 2
+                    }
+                },
+                Value = 0,
+                Type = Common.Enums.PromotionType.FixedPrice
+            });
+        }
     }
 }
