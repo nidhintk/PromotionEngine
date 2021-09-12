@@ -246,6 +246,65 @@ namespace PromotionEngine.UnitTests
             });
         }
 
+        [TestMethod]
+        public void CalculateTotalOrderValue_ValidCart1NoActivePromotions_Success()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            double total = promotionEngine.CalculateTotalOrderValue(new Cart
+            {
+                CartItems = new List<CartItem> {
+                    new CartItem {
+                        Product = new Product {
+                            Item = new SkuItem {
+                                Id = 'A'
+                            },
+                            UnitPrice = 20
+                        },
+                        Quantity = 2
+                    }
+                }
+            });
+
+            Assert.AreEqual(40, total);
+        }
+
+        [TestMethod]
+        public void CalculateTotalOrderValue_ValidCart11ActivePromotion_Success()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            bool addStatus = promotionEngine.AddActivePromotion(new Promotion()
+            {
+                PromotionParts = new List<PromotionPart>()
+                {
+                    new PromotionPart()
+                    {
+                        Item = new SkuItem() { Id = 'A' },
+                        Quantity = 2
+                    }
+                },
+                Value = 30,
+                Type = Common.Enums.PromotionType.FixedPriceForNItems
+            });
+            Assert.AreEqual(true, addStatus);
+
+            double total = promotionEngine.CalculateTotalOrderValue(new Cart
+            {
+                CartItems = new List<CartItem> {
+                    new CartItem {
+                        Product = new Product {
+                            Item = new SkuItem {
+                                Id = 'A'
+                            },
+                            UnitPrice = 20
+                        },
+                        Quantity = 3
+                    }
+                }
+            });
+
+            Assert.AreEqual(50, total);
+        }
+
         #endregion
     }
 }

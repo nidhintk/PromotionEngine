@@ -18,7 +18,7 @@ namespace PromotionEngine
         /// <value>
         /// The active promotions.
         /// </value>
-        private IList<Promotion> ActivePromotions { get; set; }
+        private List<Promotion> ActivePromotions { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SkuPromotionEngine"/> class.
@@ -102,6 +102,23 @@ namespace PromotionEngine
                 throw new ArgumentException("The Cart items should have a valid quantity!", "cart");
 
             double total = 0d;
+
+            if (ActivePromotions.Count > 0)
+            {
+                for (int i = 0; i < cart.CartItems.Count && cart.CartItems[i].PromotionApplied.Item1 == 0; i++)
+                {
+                    Promotion matching = ActivePromotions.
+                        SingleOrDefault(ap => ap.PromotionParts.Count == 1 &&
+                                            ((SkuItem)ap.PromotionParts[0].Item).Id.CompareTo(((SkuItem)cart.CartItems[i].Product.Item).Id) == 0 &&
+                                            ap.PromotionParts[0].Quantity <= cart.CartItems[i].Quantity);
+                    if (matching != null)
+                        cart.CartItems[i].PromotionApplied = Tuple.Create(matching.PromotionParts[0].Quantity, matching.Value);
+                }
+
+                total = cart.CartItems.Sum(ci => ci.PromotionApplied.Item2 + (ci.Quantity - ci.PromotionApplied.Item1) * ci.Product.UnitPrice);
+            }
+            else
+                total = cart.CartItems.Sum(ci => ci.Product.UnitPrice * ci.Quantity);
 
             return total;
         }
