@@ -13,4 +13,9 @@
     <PackageReference Include="coverlet.collector" Version="3.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PromotionEngine.Interface\PromotionEngine.Interfaces.csproj" />
+    <ProjectReference Include="..\PromotionEngine\PromotionEngine.csproj" />
+  </ItemGroup>
+
 </Project>

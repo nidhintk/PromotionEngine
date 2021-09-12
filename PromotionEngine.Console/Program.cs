@@ -8,5 +8,10 @@ namespace PromotionEngine
         {
             Console.WriteLine("Hello World!");
         }
+
+        private void ConfigureDi()
+        {
+
+        }
     }
 }

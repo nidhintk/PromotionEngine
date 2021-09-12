@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PromotionEngine.Interface\PromotionEngine.Interfaces.csproj" />
+    <ProjectReference Include="..\PromotionEngine.Common\PromotionEngine.Common.csproj" />
   </ItemGroup>
 
 </Project>
