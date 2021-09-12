@@ -77,5 +77,11 @@ namespace PromotionEngine
         {
             throw new NotImplementedException();
         }
+
+        public void CalculateTotalOrderValue(object[] cart)
+        {
+            if (cart == null)
+                throw new ArgumentNullException("cart", "A valid cart data needs to be passed in!");
+        }
     }
 }

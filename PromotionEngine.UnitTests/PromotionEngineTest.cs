@@ -9,6 +9,8 @@ namespace PromotionEngine.UnitTests
     [TestClass]
     public class PromotionEngineTest
     {
+        #region Adding Promotion tests
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void AddActivePromotion_NullPassedIn_ThrowsException()
@@ -120,5 +122,19 @@ namespace PromotionEngine.UnitTests
             });
             Assert.AreEqual(true, addStatus);
         }
+
+        #endregion
+
+        #region Calculating total order value tests
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CalculateTotalOrderValue_NULLPassedIn_ThrowsException()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            promotionEngine.CalculateTotalOrderValue(null);
+        }
+
+        #endregion
     }
 }

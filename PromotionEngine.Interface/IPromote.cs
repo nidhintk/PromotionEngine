@@ -14,5 +14,7 @@ namespace PromotionEngine.Interface
         /// <param name="promotion">The promotion.</param>
         /// <returns>true if the promotion has been added successfully else false.</returns>
         bool AddActivePromotion(Promotion promotion);
+
+        void CalculateTotalOrderValue(object[] cart); 
     }
 }
