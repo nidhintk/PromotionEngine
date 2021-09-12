@@ -13,6 +13,6 @@ namespace PromotionEngine.Entities
         /// <value>
         /// The cart items.
         /// </value>
-        public IList<CartItem> CartItems { get; set; }
+        public List<CartItem> CartItems { get; set; }
     }
 }

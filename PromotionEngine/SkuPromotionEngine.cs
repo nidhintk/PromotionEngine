@@ -1,5 +1,6 @@
 ﻿using PromotionEngine.Entities;
 using PromotionEngine.Interface;
+using PromotionEngine.PromotionCalculators.Factory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace PromotionEngine
         /// <value>
         /// The active promotions.
         /// </value>
-        private List<Promotion> ActivePromotions { get; set; }
+        private List<Promotion> activePromotions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SkuPromotionEngine"/> class.
@@ -26,7 +27,7 @@ namespace PromotionEngine
         public SkuPromotionEngine()
         {
             // Initialising the list of active promotions.
-            ActivePromotions = new List<Promotion>();
+            activePromotions = new List<Promotion>();
         }
 
         /// <summary>
@@ -71,14 +72,9 @@ namespace PromotionEngine
             if (promotion.Value <= 0)
                 throw new ArgumentException("Promotion passed in should have a valid value!", "promotion");
 
-            ActivePromotions.Add(promotion);
+            activePromotions.Add(promotion);
 
             return true;
-        }
-
-        public bool AddActivePromotions(IList<Promotion> promotions)
-        {
-            throw new NotImplementedException();
         }
 
         public double CalculateTotalOrderValue(Cart cart)
@@ -101,26 +97,13 @@ namespace PromotionEngine
             if (cart.CartItems.Any(c => c.Quantity <= 0))
                 throw new ArgumentException("The Cart items should have a valid quantity!", "cart");
 
-            double total = 0d;
+            activePromotions.ForEach(ap => PromotionCalculatorFactory.GetCalculatorInstance(ap.Type)
+                                        .ApplyPromotion(cart.CartItems.Where(ci =>
+                                            ap.PromotionParts.Any(pp => ((SkuItem)pp.Item).Id.CompareTo(((SkuItem)ci.Product.Item).Id) == 0) &&
+                                            ci.PromotionApplied.Item1 == 0
+                                        ), ap));
 
-            if (ActivePromotions.Count > 0)
-            {
-                for (int i = 0; i < cart.CartItems.Count && cart.CartItems[i].PromotionApplied.Item1 == 0; i++)
-                {
-                    Promotion matching = ActivePromotions.
-                        SingleOrDefault(ap => ap.PromotionParts.Count == 1 &&
-                                            ((SkuItem)ap.PromotionParts[0].Item).Id.CompareTo(((SkuItem)cart.CartItems[i].Product.Item).Id) == 0 &&
-                                            ap.PromotionParts[0].Quantity <= cart.CartItems[i].Quantity);
-                    if (matching != null)
-                        cart.CartItems[i].PromotionApplied = Tuple.Create(matching.PromotionParts[0].Quantity, matching.Value);
-                }
-
-                total = cart.CartItems.Sum(ci => ci.PromotionApplied.Item2 + (ci.Quantity - ci.PromotionApplied.Item1) * ci.Product.UnitPrice);
-            }
-            else
-                total = cart.CartItems.Sum(ci => ci.Product.UnitPrice * ci.Quantity);
-
-            return total;
+            return cart.CartItems.Sum(ci => ci.PromotionApplied.Item2 + (ci.Quantity - ci.PromotionApplied.Item1) * ci.Product.UnitPrice);
         }
     }
 }
