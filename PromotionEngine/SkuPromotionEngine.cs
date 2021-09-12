@@ -68,6 +68,8 @@ namespace PromotionEngine
             if (promotion.Value <= 0)
                 throw new ArgumentException("Promotion passed in should have a valid value!", "promotion");
 
+            ActivePromotions.Add(promotion);
+
             return true;
         }
 

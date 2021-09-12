@@ -97,8 +97,28 @@ namespace PromotionEngine.UnitTests
                     }
                 },
                 Value = 0,
-                Type = Common.Enums.PromotionType.FixedPrice
+                Type = Common.Enums.PromotionType.FixedPriceForNItems
             });
+        }
+
+        [TestMethod]
+        public void AddActivePromotion_ValidPromotionPassedIn_Success()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            bool addStatus = promotionEngine.AddActivePromotion(new Promotion()
+            {
+                PromotionParts = new List<PromotionPart>()
+                {
+                    new PromotionPart()
+                    {
+                        Item = new SkuItem() { Id = 'A' },
+                        Quantity = 2
+                    }
+                },
+                Value = 10,
+                Type = Common.Enums.PromotionType.FixedPriceForNItems
+            });
+            Assert.AreEqual(true, addStatus);
         }
     }
 }

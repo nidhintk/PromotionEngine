@@ -16,14 +16,19 @@
             None = 0,
 
             /// <summary>
-            /// The fixed price
+            /// The N Items fixed price
             /// </summary>
-            FixedPrice = 1,
+            FixedPriceForNItems = 1,
+
+            /// <summary>
+            /// The fixed price for combined items
+            /// </summary>
+            FixedPriceForCombinedItems = 2,
 
             /// <summary>
             /// The percentage
             /// </summary>
-            Percentage = 2
+            Percentage = 3
         }
     }
 }
