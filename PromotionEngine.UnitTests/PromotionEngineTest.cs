@@ -29,6 +29,22 @@ namespace PromotionEngine.UnitTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
+        public void AddActivePromotion_PromotionWithInvalidPromotionPartsPassedIn_ThrowsException()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            promotionEngine.AddActivePromotion(new Promotion() {
+                PromotionParts = new List<PromotionPart>()
+                {
+                    new PromotionPart()
+                    {
+                        Item = null
+                    }
+                }
+            });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
         public void AddActivePromotion_PromotionWithInvalidPromotionItemNamePassedIn_ThrowsException()
         {
             IPromote promotionEngine = new SkuPromotionEngine();
@@ -133,6 +149,101 @@ namespace PromotionEngine.UnitTests
         {
             IPromote promotionEngine = new SkuPromotionEngine();
             promotionEngine.CalculateTotalOrderValue(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CalculateTotalOrderValue_EmptyCartPassedIn_ThrowsException()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            promotionEngine.CalculateTotalOrderValue(new Cart { CartItems = null });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CalculateTotalOrderValue_InvalidCartItem_ThrowsException()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            promotionEngine.CalculateTotalOrderValue(new Cart { 
+                CartItems = new List<CartItem> { 
+                    new CartItem { 
+                        Product = new Product { 
+                            Item = new SkuItem { 
+                                Id = '\0' // invalid cart item
+                            } 
+                        } 
+                    } 
+                } 
+            });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CalculateTotalOrderValue_InvalidCart1_ThrowsException()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            promotionEngine.CalculateTotalOrderValue(new Cart { 
+                CartItems = new List<CartItem> { 
+                    new CartItem { 
+                        Product = null // invalid cart
+                    } 
+                } 
+            });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CalculateTotalOrderValue_InvalidCart2_ThrowsException()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            promotionEngine.CalculateTotalOrderValue(new Cart { 
+                CartItems = new List<CartItem> { 
+                    new CartItem { 
+                        Product = new Product { 
+                            Item = null // invalid items
+                        } 
+                    } 
+                } 
+            });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CalculateTotalOrderValue_ProblemWithInvalidUnitPricePassedIn_ThrowsException()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            promotionEngine.CalculateTotalOrderValue(new Cart { 
+                CartItems = new List<CartItem> { 
+                    new CartItem { 
+                        Product = new Product { 
+                            Item = new SkuItem { 
+                                Id = 'A' 
+                            }, 
+                            UnitPrice = -1 // invalid unit price
+                        } 
+                    } 
+                } 
+            });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CalculateTotalOrderValue_ProblemWithInvalidQuantityPassedIn_ThrowsException()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            promotionEngine.CalculateTotalOrderValue(new Cart { 
+                CartItems = new List<CartItem> { 
+                    new CartItem { 
+                        Product = new Product { 
+                            Item = new SkuItem { 
+                                Id = 'A' 
+                            }, 
+                            UnitPrice = 10 
+                        }, 
+                        Quantity = 0 // invalid quantity
+                    } 
+                } 
+            });
         }
 
         #endregion

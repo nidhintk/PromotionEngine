@@ -15,6 +15,6 @@ namespace PromotionEngine.Interface
         /// <returns>true if the promotion has been added successfully else false.</returns>
         bool AddActivePromotion(Promotion promotion);
 
-        void CalculateTotalOrderValue(object[] cart); 
+        double CalculateTotalOrderValue(Cart cart); 
     }
 }

@@ -56,6 +56,9 @@ namespace PromotionEngine
             if (promotion.PromotionParts == null || promotion.PromotionParts.Count == 0)
                 throw new ArgumentException("Valid promotion need to be passed in!", "promotion");
 
+            if (promotion.PromotionParts.Any(pp => pp.Item == null))
+                throw new ArgumentException("Valid promotion need to be passed in!", "promotion");
+
             if (promotion.PromotionParts.Any(p => !char.IsLetterOrDigit(((SkuItem)p.Item).Id)))
                 throw new ArgumentException("Promotion passed in should be against valid Sku!", "promotion");
 
@@ -78,10 +81,29 @@ namespace PromotionEngine
             throw new NotImplementedException();
         }
 
-        public void CalculateTotalOrderValue(object[] cart)
+        public double CalculateTotalOrderValue(Cart cart)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart", "A valid cart data needs to be passed in!");
+
+            if (cart.CartItems == null || cart.CartItems.Count == 0)
+                throw new InvalidOperationException("The Cart should have a valid number of items!!");
+
+            if (cart.CartItems.Any(c => c.Product == null || c.Product.Item == null))
+                throw new ArgumentException("The Cart has invalid items!", "cart");
+
+            if (cart.CartItems.Any(c => !char.IsLetterOrDigit(((SkuItem)c.Product.Item).Id)))
+                throw new ArgumentException("The Cart has invalid items!", "cart");
+
+            if (cart.CartItems.Any(c => c.Product.UnitPrice <= 0))
+                throw new ArgumentException("The Cart items should have a valid unit price!", "cart");
+
+            if (cart.CartItems.Any(c => c.Quantity <= 0))
+                throw new ArgumentException("The Cart items should have a valid quantity!", "cart");
+
+            double total = 0d;
+
+            return total;
         }
     }
 }

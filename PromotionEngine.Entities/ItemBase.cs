@@ -4,7 +4,7 @@
     /// The base class for an Item.
     /// Helps to keep things generic.
     /// </summary>
-    public class ItemBase
+    public abstract class ItemBase
     {
     }
 }
