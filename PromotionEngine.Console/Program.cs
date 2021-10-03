@@ -6,12 +6,6 @@ namespace PromotionEngine
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-        }
-
-        private void ConfigureDi()
-        {
-
         }
     }
 }

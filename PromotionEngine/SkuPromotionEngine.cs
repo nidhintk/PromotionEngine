@@ -77,6 +77,22 @@ namespace PromotionEngine
             return true;
         }
 
+        /// <summary>
+        /// Calculates the total order value.
+        /// </summary>
+        /// <param name="cart">The cart.</param>
+        /// <returns>The total order value.</returns>
+        /// <exception cref="System.ArgumentNullException">cart - A valid cart data needs to be passed in!</exception>
+        /// <exception cref="System.InvalidOperationException">The Cart should have a valid number of items!!</exception>
+        /// <exception cref="System.ArgumentException">
+        /// The Cart has invalid items! - cart
+        /// or
+        /// The Cart has invalid items! - cart
+        /// or
+        /// The Cart items should have a valid unit price! - cart
+        /// or
+        /// The Cart items should have a valid quantity! - cart
+        /// </exception>
         public double CalculateTotalOrderValue(Cart cart)
         {
             if (cart == null)
@@ -97,12 +113,14 @@ namespace PromotionEngine
             if (cart.CartItems.Any(c => c.Quantity <= 0))
                 throw new ArgumentException("The Cart items should have a valid quantity!", "cart");
 
+            // For each of the active promotion, determine the promotion calculator and apply the promotion.
             activePromotions.ForEach(ap => PromotionCalculatorFactory.GetCalculatorInstance(ap.Type)
                                         .ApplyPromotion(cart.CartItems.Where(ci =>
                                             ap.PromotionParts.Any(pp => pp.Item.Id.CompareTo(ci.Product.Item.Id) == 0) &&
                                             ci.PromotionApplied.Item1 == 0
                                         ), ap));
 
+            // Returning the sum of calculated promotions plus the cost of rest of the items in the cart.
             return cart.CartItems.Sum(ci => ci.PromotionApplied.Item2 + (ci.Quantity - ci.PromotionApplied.Item1) * ci.Product.UnitPrice);
         }
     }
