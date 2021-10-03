@@ -14,6 +14,7 @@ namespace PromotionEngine.PromotionCalculators.Factory
             if (calculatorMap.Count == 0)
             {
                 calculatorMap.Add(PromotionType.FixedPriceForNItems, new FixedPriceNItemsPromotionCalculator());
+                calculatorMap.Add(PromotionType.FixedPriceForCombinedItems, new FixedPriceCombinedItemsPromotionCalculator());
             }
         }
 

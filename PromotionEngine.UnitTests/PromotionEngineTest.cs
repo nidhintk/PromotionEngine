@@ -269,7 +269,7 @@ namespace PromotionEngine.UnitTests
         }
 
         [TestMethod]
-        public void CalculateTotalOrderValue_ValidCart1ActivePromotion1_Success()
+        public void CalculateTotalOrderValue_FixedPriceNItemsValidCart1ActivePromotion1_Success()
         {
             IPromote promotionEngine = new SkuPromotionEngine();
             bool addStatus = promotionEngine.AddActivePromotion(new Promotion()
@@ -306,7 +306,7 @@ namespace PromotionEngine.UnitTests
         }
 
         [TestMethod]
-        public void CalculateTotalOrderValue_ValidCart1DifferentActivePromotion_Success()
+        public void CalculateTotalOrderValue_FixedPriceNItemsValidCart1DifferentActivePromotion_Success()
         {
             IPromote promotionEngine = new SkuPromotionEngine();
             bool addStatus = promotionEngine.AddActivePromotion(new Promotion()
@@ -343,7 +343,7 @@ namespace PromotionEngine.UnitTests
         }
 
         [TestMethod]
-        public void CalculateTotalOrderValue_ValidCart1ActivePromotions2_Success()
+        public void CalculateTotalOrderValue_FixedPriceNItemsValidCart1ActivePromotions2_Success()
         {
             IPromote promotionEngine = new SkuPromotionEngine();
             bool addStatus = promotionEngine.AddActivePromotion(new Promotion()
@@ -359,6 +359,7 @@ namespace PromotionEngine.UnitTests
                 Value = 30,
                 Type = Common.Enums.PromotionType.FixedPriceForNItems
             });
+            Assert.AreEqual(true, addStatus);
 
             addStatus = promotionEngine.AddActivePromotion(new Promotion()
             {
@@ -400,6 +401,58 @@ namespace PromotionEngine.UnitTests
             });
 
             Assert.AreEqual(100, total);
+        }
+
+        [TestMethod]
+        public void CalculateTotalOrderValue_CombinedItemsValidCart1ActivePromotions1_Success()
+        {
+            IPromote promotionEngine = new SkuPromotionEngine();
+            bool addStatus = promotionEngine.AddActivePromotion(new Promotion()
+            {
+                PromotionParts = new List<PromotionPart>()
+                {
+                    new PromotionPart()
+                    {
+                        Item = new SkuItem() { Id = 'A' },
+                        Quantity = 1
+                    },
+
+                    new PromotionPart()
+                    {
+                        Item = new SkuItem() { Id = 'B' },
+                        Quantity = 1
+                    }
+                },
+                Value = 30,
+                Type = Common.Enums.PromotionType.FixedPriceForCombinedItems
+            });
+            Assert.AreEqual(true, addStatus);
+
+            double total = promotionEngine.CalculateTotalOrderValue(new Cart
+            {
+                CartItems = new List<CartItem> {
+                    new CartItem {
+                        Product = new Product {
+                            Item = new SkuItem {
+                                Id = 'A'
+                            },
+                            UnitPrice = 20
+                        },
+                        Quantity = 2
+                    },
+                    new CartItem {
+                        Product = new Product {
+                            Item = new SkuItem {
+                                Id = 'B'
+                            },
+                            UnitPrice = 20
+                        },
+                        Quantity = 1
+                    }
+                }
+            });
+
+            Assert.AreEqual(50, total);
         }
 
         #endregion

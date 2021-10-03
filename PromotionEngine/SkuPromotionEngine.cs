@@ -60,7 +60,7 @@ namespace PromotionEngine
             if (promotion.PromotionParts.Any(pp => pp.Item == null))
                 throw new ArgumentException("Valid promotion need to be passed in!", "promotion");
 
-            if (promotion.PromotionParts.Any(p => !char.IsLetterOrDigit(((SkuItem)p.Item).Id)))
+            if (promotion.PromotionParts.Any(p => !char.IsLetterOrDigit(p.Item.Id)))
                 throw new ArgumentException("Promotion passed in should be against valid Sku!", "promotion");
 
             if (promotion.PromotionParts.Any(p => p.Quantity <= 0))
@@ -88,7 +88,7 @@ namespace PromotionEngine
             if (cart.CartItems.Any(c => c.Product == null || c.Product.Item == null))
                 throw new ArgumentException("The Cart has invalid items!", "cart");
 
-            if (cart.CartItems.Any(c => !char.IsLetterOrDigit(((SkuItem)c.Product.Item).Id)))
+            if (cart.CartItems.Any(c => !char.IsLetterOrDigit(c.Product.Item.Id)))
                 throw new ArgumentException("The Cart has invalid items!", "cart");
 
             if (cart.CartItems.Any(c => c.Product.UnitPrice <= 0))
@@ -99,7 +99,7 @@ namespace PromotionEngine
 
             activePromotions.ForEach(ap => PromotionCalculatorFactory.GetCalculatorInstance(ap.Type)
                                         .ApplyPromotion(cart.CartItems.Where(ci =>
-                                            ap.PromotionParts.Any(pp => ((SkuItem)pp.Item).Id.CompareTo(((SkuItem)ci.Product.Item).Id) == 0) &&
+                                            ap.PromotionParts.Any(pp => pp.Item.Id.CompareTo(ci.Product.Item.Id) == 0) &&
                                             ci.PromotionApplied.Item1 == 0
                                         ), ap));
 

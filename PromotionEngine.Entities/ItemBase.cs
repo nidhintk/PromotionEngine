@@ -6,5 +6,12 @@
     /// </summary>
     public abstract class ItemBase
     {
+        /// <summary>
+        /// Gets or sets the single character SKU Id.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public char Id { get; set; }
     }
 }
